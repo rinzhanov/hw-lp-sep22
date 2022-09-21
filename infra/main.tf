@@ -1,7 +1,9 @@
 locals {
   required_apis = [
     "compute.googleapis.com",
-    "container.googleapis.com"
+    "container.googleapis.com",
+    "run.googleapis.com",
+    "iam.googleapis.com"
   ]
   env_vars_k8s = {
     PROJECT_ID   = var.project
@@ -100,4 +102,13 @@ module "load_balancer" {
   instance-group = module.backend.self-link
   network        = google_compute_network.custom-vpc.self_link
   vm_tag         = var.vm_tag
+}
+
+module "clour_run" {
+  source         = "./modules/cloud_run"
+  project        = var.project
+  region         = var.region
+    depends_on = [
+    google_project_service.apis
+  ]
 }
