@@ -6,7 +6,7 @@ variable "project" {
 variable "region" {
   type        = string
   description = "Deployment region"
-  default = "us-east4"
+  default     = "us-east4"
 }
 
 variable "secret_name" {
@@ -17,9 +17,14 @@ variable "secret_name" {
 variable "cluster_name" {
   type        = string
   description = "Cluster Name"
- }
+}
 
- variable "zone" {
-     type = string
-     description = "Zone for VM"
- }
+variable "zone" {
+  type        = string
+  description = "Zone for VM"
+}
+
+variable "vm_tag" {
+  type        = string
+  description = "network tag for load balanced VMs"
+}
