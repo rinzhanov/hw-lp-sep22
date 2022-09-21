@@ -4,4 +4,5 @@ module "infra" {
     region = "us-south1"
     secret_name = "SA_KEY"
     cluster_name = "autopilot-hw"
+    zone = "us-south1-a"
 }

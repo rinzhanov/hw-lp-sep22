@@ -18,3 +18,8 @@ variable "cluster_name" {
   type        = string
   description = "Cluster Name"
  }
+
+ variable "zone" {
+     type = string
+     description = "Zone for VM"
+ }

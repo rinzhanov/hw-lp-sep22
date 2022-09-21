@@ -24,8 +24,8 @@ resource "google_project_service" "apis"{
     disable_on_destroy = false
 }
 
-resource "google_compute_network" "autopilot-vpc"{
-    name = "autopilot-vpc"
+resource "google_compute_network" "custom-vpc"{
+    name = "custom-vpc"
     project = var.project
     auto_create_subnetworks = false
     depends_on = [
@@ -36,7 +36,7 @@ resource "google_compute_network" "autopilot-vpc"{
 resource "google_compute_subnetwork" "autopilot-subnet" {
     name = "autopilot-subnet"
     region = var.region
-    network = google_compute_network.autopilot-vpc.id
+    network = google_compute_network.custom-vpc.id
     ip_cidr_range = "10.10.10.0/24"
     project = var.project
 
@@ -57,7 +57,7 @@ resource "google_compute_subnetwork" "autopilot-subnet" {
 resource "google_compute_subnetwork" "vm-subnet" {
     name = "vm-subnet"
     region = var.region
-    network = google_compute_network.autopilot-vpc.id
+    network = google_compute_network.custom-vpc.id
     ip_cidr_range = "10.10.14.0/24"
     project = var.project
     private_ip_google_access = true 
@@ -78,9 +78,17 @@ module "autopilot-gke" {
   cluster_name = var.cluster_name
   cluster_region                     = var.region
   project                            = var.project
-  network                            = google_compute_network.autopilot-vpc.name
+  network                            = google_compute_network.custom-vpc.name
   subnetwork                         = google_compute_subnetwork.autopilot-subnet.id
   cluster_gke_master_ipv4_cidr_block = "172.23.0.0/28"
   env_vars_k8s                       = local.env_vars_k8s
 }
 
+module "backend" {
+  source = "./modules/backend_vm_instance"
+  region                     = var.region
+  project                            = var.project
+  network                            = google_compute_network.custom-vpc.id
+  subnetwork                         = google_compute_subnetwork.vm-subnet.id
+  zone = var.zone
+}
