@@ -1,6 +1,6 @@
 resource "google_container_cluster" "autopilot-hw" {
 
-  name = var.cluster_name
+  name     = var.cluster_name
   location = var.cluster_region
 
   project = var.project
